@@ -1,0 +1,5 @@
+{
+  "name": "partykit_next_test-party",
+  "main": "party/index.js",
+  "compatibilityDate": "2023-10-14"
+}
