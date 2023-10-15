@@ -22,6 +22,7 @@ export default function Clicker() {
   function handleClick() {
     ws.send("click");
     setDisabled(true);
+
     setTimeout(() => {
       setDisabled(false);
     }, 1000);
@@ -29,8 +30,8 @@ export default function Clicker() {
   return (
     <div className={styles.clickerContainer}>
       <h1 className={styles.h1}>Open another browser and ADD THOSE CLICKS</h1>
-      <h2 className={styles.h2}>Clicks: {clicks}</h2>
-      <button onClick={handleClick} disabled={disabled}>
+      <h2 className={styles.h2}>Clicks: {clicks === 0 ? "-" : clicks}</h2>
+      <button disabled={disabled} onClick={handleClick}>
         Add a Click
       </button>
     </div>

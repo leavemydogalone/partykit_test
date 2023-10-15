@@ -17,7 +17,7 @@ export function rateLimit(
 
   // in case we hibernated, load the last known state
   if (!sender.nextAllowedTime) {
-    const limiter = (sender.deserializeAttachment() ?? {}) as RateLimiter;
+    const limiter = (sender.state ?? {}) as RateLimiter;
     sender.nextAllowedTime = limiter.nextAllowedTime ?? Date.now();
     sender.violations = limiter.violations ?? 0;
   }
@@ -35,6 +35,7 @@ export function rateLimit(
       sender.send(SLOW_DOWN_SENTINEL);
     } else {
       sender.send(GO_AWAY_SENTINEL);
+
       sender.close();
     }
   }
@@ -43,7 +44,7 @@ export function rateLimit(
   sender.nextAllowedTime += cooldownMs;
 
   // save rate limiter state in case we hibernate
-  sender.serializeAttachment({
+  sender.setState({
     nextAllowedTime: sender.nextAllowedTime,
     violations: sender.violations,
   });
