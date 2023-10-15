@@ -1,16 +1,38 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import usePartySocket from "partysocket/react";
+import styles from "./Clicker.module.css";
 
 export default function Clicker() {
+  const [clicks, setClicks] = useState(0);
+  const [disabled, setDisabled] = useState(false);
+
   const ws = usePartySocket({
-    host: "localhost:1999", // or localhost:1999 in dev
+    host: "localhost:1999",
     room: "my-room",
 
     onOpen() {
       console.log("connected");
     },
+    onMessage(event) {
+      setClicks(event.data);
+    },
   });
 
-  return <div>clicker</div>;
+  function handleClick() {
+    ws.send("click");
+    setDisabled(true);
+    setTimeout(() => {
+      setDisabled(false);
+    }, 1000);
+  }
+  return (
+    <div className={styles.clickerContainer}>
+      <h1 className={styles.h1}>Open another browser and ADD THOSE CLICKS</h1>
+      <h2 className={styles.h2}>Clicks: {clicks}</h2>
+      <button onClick={handleClick} disabled={disabled}>
+        Add a Click
+      </button>
+    </div>
+  );
 }

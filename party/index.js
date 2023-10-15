@@ -1,3 +1,4 @@
+import { rateLimit } from "./limiter";
 /* eslint-env browser */
 
 // @ts-check
@@ -18,7 +19,10 @@ class PartyServer {
     /** @type {Party} */
     this.party = party;
   }
-
+  clicks = 0;
+  async onStart() {
+    this.clicks = (await this.party.storage.get("clicks")) ?? 0;
+  }
   /**
    * @param {Connection} conn - The connection object.
    * @param {ConnectionContext} ctx - The context object.
@@ -33,7 +37,7 @@ class PartyServer {
     );
 
     // Send a message to the connection
-    conn.send("hello from server");
+    conn.send(`${this.clicks}`);
   }
 
   /**
@@ -41,9 +45,13 @@ class PartyServer {
    * @param {Connection} sender
    */
   onMessage(message, sender) {
-    console.log(`connection ${sender.id} sent message: ${message}`);
-    // Broadcast the received message to all other connections in the room except the sender
-    this.party.broadcast(`${sender.id}: ${message}`, [sender.id]);
+    rateLimit(sender, 1000, () => {
+      console.log(`connection ${sender.id} sent message: ${message}`);
+      this.clicks += 1;
+      // Broadcast the received message to all other connections in the room except the sender
+      this.party.broadcast(`${this.clicks}`);
+      this.party.storage.put("clicks", this.clicks + 1);
+    });
   }
 }
 
