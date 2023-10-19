@@ -35,7 +35,6 @@ export function rateLimit(
       sender.send(SLOW_DOWN_SENTINEL);
     } else {
       sender.send(GO_AWAY_SENTINEL);
-
       sender.close();
     }
   }

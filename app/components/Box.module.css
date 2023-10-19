@@ -1,0 +1,11 @@
+.box {
+  --size: 80px;
+  height: var(--size);
+  width: var(--size);
+  background: rgb(185, 185, 255);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}

@@ -33,7 +33,7 @@ class PartyServer {
       `Connected:
   id: ${conn.id}
   room: ${this.party.id}
-  url: ${ctx.request.url.pathname}`
+  url: ${new URL(ctx.request.url).pathname}`
     );
 
     // Send a message to the connection
@@ -46,13 +46,7 @@ class PartyServer {
    * @param {Connection} sender
    */
   onMessage(message, sender) {
-    rateLimit(sender, 1000, () => {
-      console.log(`connection ${sender.id} sent message: ${message}`);
-      this.clicks += 1;
-      // Broadcast the received message to all other connections in the room except the sender
-      this.party.broadcast(`${this.clicks}`);
-      this.party.storage.put("clicks", this.clicks + 1);
-    });
+    this.party.broadcast(`hi`);
   }
 }
 
