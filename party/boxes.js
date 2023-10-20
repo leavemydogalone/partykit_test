@@ -46,7 +46,7 @@ class PartyServer {
    * @param {Connection} sender
    */
   onMessage(message, sender) {
-    this.party.broadcast(`hi`);
+    this.party.broadcast(message);
   }
 }
 

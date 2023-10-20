@@ -21,12 +21,22 @@ export default function BoxContainer() {
       console.log("connected");
     },
     onMessage(event) {
-      console.log(event.data);
+      console.log(JSON.parse(event.data));
     },
   });
 
-  function handleMove() {
-    ws.send("click");
+  function handleMove(id, position) {
+    // ws.send(JSON.stringify({ id: id, position: position }));
+    setBoxes((prev) =>
+      prev.map((box) => {
+        if (box.id !== id) {
+          return { ...box };
+        } else {
+          console.log(boxes);
+          return { ...box, x: position.x, y: position.y };
+        }
+      })
+    );
   }
 
   return (
