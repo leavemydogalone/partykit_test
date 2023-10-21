@@ -1,73 +1,73 @@
 import React, { useState, useRef } from "react";
 import styles from "./Box.module.css";
+import keepBoxInContainer from "../helpers/keepBoxInContainer";
 
-export default function Box({ props, setBoxes }) {
-  const [offsetX, setOffsetX] = useState(0);
+export default function Box({
+  position,
+  id,
+  setBoxes,
+  mouseIsDown,
+  setMouseIsDown,
+  boxContainer,
+}) {
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
   //   the left offset from parent div of the draggerContainer
-  const [isDown, setIsDown] = useState(false);
-  //   if the mouse is held down
-  const [draggerPositionX, setDraggerPositionX] = useState(0);
-  //   The "left" postition of the draggerContainer
 
   const box = useRef(null);
 
-  const { x, y, id } = props;
-  let transform = { transform: `translate(${x}px, ${y}px)` };
-
   function handleMove(id, position) {
+    position.x = Math.max(0, position.x);
+    position.x = Math.min(
+      position.x,
+      boxContainer.offsetWidth - box.current.offsetWidth
+    );
+    position.y = Math.max(0, position.y);
+    position.y = Math.min(
+      position.y,
+      boxContainer.offsetHeight - box.current.offsetHeight
+    );
+
     // ws.send(JSON.stringify({ id: id, position: position }));
     setBoxes((prev) =>
       prev.map((box) => {
         if (box.id !== id) {
           return { ...box };
         } else {
-          // console.log(boxes);
-          return { ...box, x: position.x, y: 0 };
+          return { ...box, x: position.x, y: position.y };
         }
       })
     );
-  }
-
-  function handleMouseMove(event) {
-    if (!selected) {
-      return;
-    } else {
-      let bodyRect = box.current.getBoundingClientRect(),
-        elemRect = event.target.getBoundingClientRect(),
-        offsetX = bodyRect.left - elemRect.left,
-        offsetY = elemRect.top - bodyRect.top;
-
-      handleMove(id, {
-        x: offsetX + event.clientX,
-        y: offsetY + event.clientY,
-      });
-    }
   }
 
   return (
     <div
       ref={box}
       className={styles.box}
-      style={{ left: draggerPositionX }}
-      onMouseUp={() => setIsDown(false)}
-      onMouseLeave={() => setIsDown(false)}
+      style={{ left: position.x, top: position.y }}
       onMouseMoveCapture={(e) => {
-        if (isDown) {
-          setDraggerPositionX(offsetX + e.clientX);
+        if (mouseIsDown) {
+          // setDraggerPositionX(offsetX + e.clientX);
           // if the mouse is down, will set the "left" position of the dragger,
           //   based on the offsetLeft of the draggerContainer when the mouse went down
           // plus the mouse position
-          if (offsetX + e.clientX < 0) {
-            setDraggerPositionX(0);
-          }
+          // if (offsetX + e.clientX < 0) {
+          //   setDraggerPositionX(0);
+          // }
+          handleMove(id, {
+            x: offset.x + e.clientX,
+            y: offset.y + e.clientY,
+          });
           //   prevents the dragger from being dragged out of the left of the container
         }
       }}
       onMouseDown={(e) => {
-        setIsDown(true);
+        setMouseIsDown(true);
         const nullChecker =
           box.current !== null &&
-          setOffsetX(box.current.offsetLeft - e.clientX);
+          setOffset({
+            x: box.current.offsetLeft - e.clientX,
+            y: box.current.offsetTop - e.clientY,
+          });
       }}
     >
       <span>Box</span>
