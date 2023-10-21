@@ -1,0 +1,9 @@
+.boxContainer {
+  width: 95%;
+  max-height: 95%;
+  max-width: 600px;
+  height: 600px;
+  border-radius: 5px;
+  background-color: grey;
+  position: relative;
+}
