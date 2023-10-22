@@ -22,7 +22,6 @@ class PartyServer {
 
   async onStart() {
     // await this.party.storage.put("boxes", this.boxes);
-
     this.boxes = (await this.party.storage.get("boxes")) ?? [];
   }
   /**
@@ -43,7 +42,9 @@ class PartyServer {
     // new URL(ctx.request.url).pathname
     conn.send(JSON.stringify(this.boxes));
   }
-
+  async onClose() {
+    await this.party.storage.put("boxes", this.boxes);
+  }
   /**
    * @param {string} message
    * @param {Connection} sender
