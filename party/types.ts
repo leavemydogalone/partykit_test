@@ -6,3 +6,8 @@ export enum ACTIONS {
   STOP_BOX,
   REMOVE_BOX,
 }
+export type Box = {
+  position: { x: 0; y: 0 };
+  id: 0;
+  selected: false;
+};

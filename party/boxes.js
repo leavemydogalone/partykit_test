@@ -21,6 +21,8 @@ class PartyServer {
   boxes = [{ position: { x: 0, y: 0 }, id: 0, selected: false }];
 
   async onStart() {
+    // await this.party.storage.delete("boxes");
+
     // await this.party.storage.put("boxes", this.boxes);
     this.boxes = (await this.party.storage.get("boxes")) ?? [];
   }
@@ -42,9 +44,9 @@ class PartyServer {
     // new URL(ctx.request.url).pathname
     conn.send(JSON.stringify(this.boxes));
   }
-  async onClose() {
-    await this.party.storage.put("boxes", this.boxes);
-  }
+  // onClose() {
+  //   this.party.storage.put("boxes", this.boxes);
+  // }
   /**
    * @param {string} message
    * @param {Connection} sender
@@ -61,8 +63,19 @@ class PartyServer {
           }
         });
         this.party.broadcast(JSON.stringify(this.boxes));
+        break;
+      case ACTIONS.ADD_BOX:
+        this.boxes.push({
+          position: { x: 0, y: 0 },
+          id: this.boxes[this.boxes.length - 1].id + 1,
+          selected: false,
+        });
+        this.party.broadcast(JSON.stringify(this.boxes));
+        break;
+
       default:
         this.party.broadcast(JSON.stringify(this.boxes));
+        break;
     }
   }
 }

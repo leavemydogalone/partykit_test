@@ -6,7 +6,6 @@ export default function Box({
   ws,
   position,
   id,
-
   mouseIsDown,
   setMouseIsDown,
   boxContainer,

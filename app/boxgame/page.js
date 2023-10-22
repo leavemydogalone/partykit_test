@@ -45,7 +45,18 @@ export default function BoxContainer() {
             ))
           : " "}
       </section>
-      <button>ADD BOX</button>
+      <button
+        onClick={() => {
+          ws.send(
+            JSON.stringify({
+              action: ACTIONS.ADD_BOX,
+              payload: {},
+            })
+          );
+        }}
+      >
+        ADD BOX
+      </button>
     </main>
   );
 }
