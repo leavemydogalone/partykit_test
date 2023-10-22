@@ -1,21 +1,22 @@
 import React, { useState, useRef } from "react";
 import styles from "./Box.module.css";
-import keepBoxInContainer from "../helpers/keepBoxInContainer";
+import { ACTIONS } from "@/party/types";
 
 export default function Box({
+  ws,
   position,
   id,
-  setBoxes,
+
   mouseIsDown,
   setMouseIsDown,
   boxContainer,
 }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  //   the left offset from parent div of the draggerContainer
+  //   the left offset of the box from parent div
 
   const box = useRef(null);
 
-  function handleMove(id, position) {
+  function keepBoxInContainer(position) {
     position.x = Math.max(0, position.x);
     position.x = Math.min(
       position.x,
@@ -26,15 +27,18 @@ export default function Box({
       position.y,
       boxContainer.offsetHeight - box.current.offsetHeight
     );
+    return position;
+  }
+  function handleMove(id, position) {
+    let positionWithinBox = keepBoxInContainer(position);
 
-    // ws.send(JSON.stringify({ id: id, position: position }));
-    setBoxes((prev) =>
-      prev.map((box) => {
-        if (box.id !== id) {
-          return { ...box };
-        } else {
-          return { ...box, x: position.x, y: position.y };
-        }
+    ws.send(
+      JSON.stringify({
+        action: ACTIONS.MOVE_BOX,
+        payload: {
+          id: id,
+          position: { x: positionWithinBox.x, y: positionWithinBox.y },
+        },
       })
     );
   }
@@ -46,18 +50,10 @@ export default function Box({
       style={{ left: position.x, top: position.y }}
       onMouseMoveCapture={(e) => {
         if (mouseIsDown) {
-          // setDraggerPositionX(offsetX + e.clientX);
-          // if the mouse is down, will set the "left" position of the dragger,
-          //   based on the offsetLeft of the draggerContainer when the mouse went down
-          // plus the mouse position
-          // if (offsetX + e.clientX < 0) {
-          //   setDraggerPositionX(0);
-          // }
           handleMove(id, {
             x: offset.x + e.clientX,
             y: offset.y + e.clientY,
           });
-          //   prevents the dragger from being dragged out of the left of the container
         }
       }}
       onMouseDown={(e) => {

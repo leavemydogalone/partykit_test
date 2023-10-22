@@ -3,21 +3,11 @@ import React, { useRef, useState } from "react";
 import usePartySocket from "partysocket/react";
 import styles from "./page.module.css";
 import Box from "../components/Box";
+import { ACTIONS } from "@/party/types";
 
 export default function BoxContainer() {
   const [mouseIsDown, setMouseIsDown] = useState(false);
-  const [boxes, setBoxes] = useState([
-    {
-      x: 0,
-      y: 0,
-      id: 9,
-    },
-    {
-      x: 0,
-      y: 0,
-      id: 20,
-    },
-  ]);
+  const [boxes, setBoxes] = useState([]);
 
   const boxContainer = useRef(null);
 
@@ -25,11 +15,11 @@ export default function BoxContainer() {
     host: "localhost:1999",
     room: "boxes",
     party: "boxes",
-    onOpen() {
+    onOpen(event) {
       console.log("connected");
     },
     onMessage(event) {
-      console.log(JSON.parse(event.data));
+      setBoxes(JSON.parse(event.data));
     },
   });
 
@@ -39,20 +29,23 @@ export default function BoxContainer() {
         ref={boxContainer}
         className={styles.boxContainer}
         onMouseUp={() => setMouseIsDown(false)}
-        // onMouseLeave={() => setMouseIsDown(false)}
       >
-        {boxes.map((box) => (
-          <Box
-            key={box.id}
-            position={{ x: box.x, y: box.y }}
-            id={box.id}
-            setBoxes={setBoxes}
-            mouseIsDown={mouseIsDown}
-            setMouseIsDown={setMouseIsDown}
-            boxContainer={boxContainer.current}
-          />
-        ))}
+        {boxes.length > 0
+          ? boxes.map((box) => (
+              <Box
+                ws={ws}
+                key={box.id}
+                position={{ x: box.x, y: box.y }}
+                id={box.id}
+                setBoxes={setBoxes}
+                mouseIsDown={mouseIsDown}
+                setMouseIsDown={setMouseIsDown}
+                boxContainer={boxContainer.current}
+              />
+            ))
+          : " "}
       </section>
+      <button>ADD BOX</button>
     </main>
   );
 }
