@@ -21,9 +21,9 @@ class PartyServer {
   boxes = [{ position: { x: 0, y: 0 }, id: 0, selected: false }];
 
   async onStart() {
-    // await this.party.storage.delete("boxes");
+    await this.party.storage.delete("boxes");
+    await this.party.storage.put("boxes", this.boxes);
 
-    // await this.party.storage.put("boxes", this.boxes);
     this.boxes = (await this.party.storage.get("boxes")) ?? [];
   }
   /**
@@ -44,9 +44,9 @@ class PartyServer {
     // new URL(ctx.request.url).pathname
     conn.send(JSON.stringify(this.boxes));
   }
-  // onClose() {
-  //   this.party.storage.put("boxes", this.boxes);
-  // }
+  onClose() {
+    this.party.storage.put("boxes", this.boxes);
+  }
   /**
    * @param {string} message
    * @param {Connection} sender
@@ -65,12 +65,22 @@ class PartyServer {
         this.party.broadcast(JSON.stringify(this.boxes));
         break;
       case ACTIONS.ADD_BOX:
+        const newId =
+          this.boxes.length < 1 ? 0 : this.boxes[this.boxes.length - 1].id + 1;
         this.boxes.push({
           position: { x: 0, y: 0 },
-          id: this.boxes[this.boxes.length - 1].id + 1,
+          id: newId,
           selected: false,
         });
         this.party.broadcast(JSON.stringify(this.boxes));
+        break;
+      case ACTIONS.REMOVE_BOX:
+        const updatedBoxes = this.boxes.filter((box) => {
+          return box.id !== payload.id;
+        });
+        this.boxes = updatedBoxes;
+        this.party.broadcast(JSON.stringify(this.boxes));
+
         break;
       case ACTIONS.UPDATE_BOX_TEXT:
         this.boxes = this.boxes.map((box) => {

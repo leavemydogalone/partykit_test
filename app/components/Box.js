@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./Box.module.css";
 import { ACTIONS } from "@/party/types";
 
@@ -13,8 +13,25 @@ export default function Box({
 }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   //   the left offset of the box from parent div
-
   const box = useRef(null);
+  const textRef = useRef(null);
+
+  //need to create logic to handle when a box is selected or being edited by someone else
+  //prevent others from editing
+  //make the box rise to the top of z-index for the one moving/making the edit and
+  //prevent text select when moving
+
+  useEffect(() => {
+    if (textRef.current) {
+      // We need to reset the height momentarily to get the correct scrollHeight for the textarea
+      textRef.current.style.height = "0px";
+      const scrollHeight = textRef.current.scrollHeight;
+
+      // We then set the height directly, outside of the render loop
+      // Trying to set this with state or a ref will product an incorrect value.
+      textRef.current.style.height = scrollHeight + 1 + "px";
+    }
+  }, [textRef.current, text]);
 
   function keepBoxInContainer(position) {
     position.x = Math.max(0, position.x);
@@ -29,6 +46,7 @@ export default function Box({
     );
     return position;
   }
+
   function handleMove(id, position) {
     let positionWithinBox = keepBoxInContainer(position);
 
@@ -55,11 +73,25 @@ export default function Box({
     );
   }
 
+  function handleRemove() {
+    ws.send(
+      JSON.stringify({
+        action: ACTIONS.REMOVE_BOX,
+        payload: {
+          id: id,
+        },
+      })
+    );
+  }
+
   return (
     <div
       ref={box}
       className={styles.box}
-      style={{ left: position.x, top: position.y }}
+      style={{
+        left: position.x,
+        top: position.y,
+      }}
       onMouseMoveCapture={(e) => {
         if (mouseIsDown) {
           handleMove(id, {
@@ -78,7 +110,14 @@ export default function Box({
           });
       }}
     >
-      <input onChange={(e) => handleInputChange(e)} value={text} />
+      <textarea
+        onChange={(e) => handleInputChange(e)}
+        value={text}
+        ref={textRef}
+      />
+      <button className={styles.delete} onClick={() => handleRemove()}>
+        x
+      </button>
     </div>
   );
 }
