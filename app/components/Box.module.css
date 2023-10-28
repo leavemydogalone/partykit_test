@@ -1,7 +1,8 @@
 .box {
   --size: 80px;
-  height: var(--size);
-  width: var(--size);
+  min-width: var(--size);
+  aspect-ratio: 1;
+  width: fit-content;
   background: rgb(185, 185, 255);
   border-radius: 8px;
   display: flex;
@@ -11,4 +12,13 @@
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.box input {
+  max-width: 30ch;
+  padding: 10px 15px;
+  display: block;
+  border: none;
+  background-color: #ffffff29;
+  text-align: center;
 }

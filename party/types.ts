@@ -5,9 +5,5 @@ export enum ACTIONS {
   MOVE_BOX,
   STOP_BOX,
   REMOVE_BOX,
+  UPDATE_BOX_TEXT,
 }
-export type Box = {
-  position: { x: 0; y: 0 };
-  id: 0;
-  selected: false;
-};

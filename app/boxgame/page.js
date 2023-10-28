@@ -36,6 +36,7 @@ export default function BoxContainer() {
                 ws={ws}
                 key={box.id}
                 position={{ x: box.x, y: box.y }}
+                text={box.text || ""}
                 id={box.id}
                 setBoxes={setBoxes}
                 mouseIsDown={mouseIsDown}

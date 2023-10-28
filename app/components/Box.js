@@ -9,6 +9,7 @@ export default function Box({
   mouseIsDown,
   setMouseIsDown,
   boxContainer,
+  text,
 }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   //   the left offset of the box from parent div
@@ -42,6 +43,18 @@ export default function Box({
     );
   }
 
+  function handleInputChange(e) {
+    ws.send(
+      JSON.stringify({
+        action: ACTIONS.UPDATE_BOX_TEXT,
+        payload: {
+          id: id,
+          text: e.target.value,
+        },
+      })
+    );
+  }
+
   return (
     <div
       ref={box}
@@ -65,7 +78,7 @@ export default function Box({
           });
       }}
     >
-      <span>Box</span>
+      <input onChange={(e) => handleInputChange(e)} value={text} />
     </div>
   );
 }

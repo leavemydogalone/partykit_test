@@ -72,7 +72,16 @@ class PartyServer {
         });
         this.party.broadcast(JSON.stringify(this.boxes));
         break;
-
+      case ACTIONS.UPDATE_BOX_TEXT:
+        this.boxes = this.boxes.map((box) => {
+          if (box.id !== payload.id) {
+            return { ...box };
+          } else {
+            return { ...box, text: payload.text };
+          }
+        });
+        this.party.broadcast(JSON.stringify(this.boxes));
+        break;
       default:
         this.party.broadcast(JSON.stringify(this.boxes));
         break;
