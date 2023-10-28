@@ -11,11 +11,12 @@ export default function Box({
   boxContainer,
   text,
 }) {
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
   //   the left offset of the box from parent div
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
   const box = useRef(null);
   const textRef = useRef(null);
 
+  //TODO
   //need to create logic to handle when a box is selected or being edited by someone else
   //prevent others from editing
   //make the box rise to the top of z-index for the one moving/making the edit and
