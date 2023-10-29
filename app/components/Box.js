@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./Box.module.css";
 import { ACTIONS } from "@/party/types";
+import { keepBoxInContainer } from "../helpers/boxHelpers";
 
 export default function Box({
   ws,
@@ -17,6 +18,7 @@ export default function Box({
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const box = useRef(null);
   const textRef = useRef(null);
+  const [newZIndex, setNewZIndex] = useState(1);
 
   //TODO
   //need to create logic to handle when a box is selected or being edited by someone else
@@ -36,22 +38,12 @@ export default function Box({
     }
   }, [textRef.current, text]);
 
-  function keepBoxInContainer(position) {
-    position.x = Math.max(0, position.x);
-    position.x = Math.min(
-      position.x,
-      boxContainer.offsetWidth - box.current.offsetWidth
-    );
-    position.y = Math.max(0, position.y);
-    position.y = Math.min(
-      position.y,
-      boxContainer.offsetHeight - box.current.offsetHeight
-    );
-    return position;
-  }
-
   function handleMove(id, position) {
-    let positionWithinBox = keepBoxInContainer(position);
+    let positionWithinBox = keepBoxInContainer(
+      position,
+      box.current,
+      boxContainer
+    );
 
     ws.send(
       JSON.stringify({
@@ -88,47 +80,56 @@ export default function Box({
   }
 
   return (
-    <div
-      ref={box}
-      className={styles.box}
-      style={{
-        left: position.x,
-        top: position.y,
-        border: selected ? "2px solid" : "",
-        zIndex: selected ? "5" : "1",
-      }}
-      onMouseMoveCapture={(e) => {
-        if (mouseIsDown) {
-          handleMove(id, {
-            x: offset.x + e.clientX,
-            y: offset.y + e.clientY,
-          });
-        }
-      }}
-    >
+    <>
       <div
-        className={styles.upperBar}
-        onMouseDown={(e) => {
-          setSelectedBoxId(id);
-          setMouseIsDown(true);
-          const nullChecker =
-            box.current !== null &&
-            setOffset({
-              x: box.current.offsetLeft - e.clientX,
-              y: box.current.offsetTop - e.clientY,
-            });
-        }}
+        className={styles.screen}
+        style={{ display: selected ? "block" : "none" }}
       ></div>
-      <main className={styles.centerContainer}>
-        <textarea
-          onChange={(e) => handleInputChange(e)}
-          value={text}
-          ref={textRef}
-        />
-      </main>
-      <button className={styles.delete} onClick={() => handleRemove()}>
-        x
-      </button>
-    </div>
+
+      <div
+        ref={box}
+        className={styles.box}
+        style={{
+          left: position.x,
+          top: position.y,
+          border: selected ? "2px solid" : "",
+          zIndex: selected ? "999" : "1",
+        }}
+        id={id}
+        onMouseMoveCapture={(e) => {
+          if (mouseIsDown) {
+            handleMove(id, {
+              x: offset.x + e.clientX,
+              y: offset.y + e.clientY,
+            });
+          }
+        }}
+      >
+        <div
+          className={styles.upperBar}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            setSelectedBoxId(id);
+            setMouseIsDown(true);
+            const nullChecker =
+              box.current !== null &&
+              setOffset({
+                x: box.current.offsetLeft - e.clientX,
+                y: box.current.offsetTop - e.clientY,
+              });
+          }}
+        ></div>
+        <main className={styles.centerContainer}>
+          <textarea
+            onChange={(e) => handleInputChange(e)}
+            value={text}
+            ref={textRef}
+          />
+        </main>
+        <button className={styles.delete} onClick={() => handleRemove()}>
+          x
+        </button>
+      </div>
+    </>
   );
 }

@@ -11,6 +11,7 @@ export default function BoxContainer() {
   const [selectedBoxId, setSelectedBoxId] = useState(null);
 
   const boxContainer = useRef(null);
+  // const box = useRef(null);
 
   const ws = usePartySocket({
     host: "localhost:1999",
@@ -48,6 +49,7 @@ export default function BoxContainer() {
                 boxContainer={boxContainer.current}
                 selected={box.id === selectedBoxId}
                 setSelectedBoxId={setSelectedBoxId}
+                // ref={box.id === selectedBoxId ? box : null}
               />
             ))
           : " "}
