@@ -21,8 +21,8 @@ class PartyServer {
   boxes = [{ position: { x: 0, y: 0 }, id: 0, selected: false }];
 
   async onStart() {
-    await this.party.storage.delete("boxes");
-    await this.party.storage.put("boxes", this.boxes);
+    // await this.party.storage.delete("boxes");
+    // await this.party.storage.put("boxes", this.boxes);
 
     this.boxes = (await this.party.storage.get("boxes")) ?? [];
   }

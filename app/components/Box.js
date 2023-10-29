@@ -10,6 +10,8 @@ export default function Box({
   setMouseIsDown,
   boxContainer,
   text,
+  selected,
+  setSelectedBoxId,
 }) {
   //   the left offset of the box from parent div
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -92,6 +94,8 @@ export default function Box({
       style={{
         left: position.x,
         top: position.y,
+        border: selected ? "2px solid" : "",
+        zIndex: selected ? "5" : "1",
       }}
       onMouseMoveCapture={(e) => {
         if (mouseIsDown) {
@@ -101,21 +105,27 @@ export default function Box({
           });
         }
       }}
-      onMouseDown={(e) => {
-        setMouseIsDown(true);
-        const nullChecker =
-          box.current !== null &&
-          setOffset({
-            x: box.current.offsetLeft - e.clientX,
-            y: box.current.offsetTop - e.clientY,
-          });
-      }}
     >
-      <textarea
-        onChange={(e) => handleInputChange(e)}
-        value={text}
-        ref={textRef}
-      />
+      <div
+        className={styles.upperBar}
+        onMouseDown={(e) => {
+          setSelectedBoxId(id);
+          setMouseIsDown(true);
+          const nullChecker =
+            box.current !== null &&
+            setOffset({
+              x: box.current.offsetLeft - e.clientX,
+              y: box.current.offsetTop - e.clientY,
+            });
+        }}
+      ></div>
+      <main className={styles.centerContainer}>
+        <textarea
+          onChange={(e) => handleInputChange(e)}
+          value={text}
+          ref={textRef}
+        />
+      </main>
       <button className={styles.delete} onClick={() => handleRemove()}>
         x
       </button>

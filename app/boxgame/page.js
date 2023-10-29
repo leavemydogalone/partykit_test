@@ -8,6 +8,7 @@ import { ACTIONS } from "@/party/types";
 export default function BoxContainer() {
   const [mouseIsDown, setMouseIsDown] = useState(false);
   const [boxes, setBoxes] = useState([]);
+  const [selectedBoxId, setSelectedBoxId] = useState(null);
 
   const boxContainer = useRef(null);
 
@@ -28,7 +29,10 @@ export default function BoxContainer() {
       <section
         ref={boxContainer}
         className={styles.boxContainer}
-        onMouseUp={() => setMouseIsDown(false)}
+        onMouseUp={() => {
+          setMouseIsDown(false);
+          setSelectedBoxId(null);
+        }}
       >
         {boxes.length > 0
           ? boxes.map((box) => (
@@ -42,6 +46,8 @@ export default function BoxContainer() {
                 mouseIsDown={mouseIsDown}
                 setMouseIsDown={setMouseIsDown}
                 boxContainer={boxContainer.current}
+                selected={box.id === selectedBoxId}
+                setSelectedBoxId={setSelectedBoxId}
               />
             ))
           : " "}
