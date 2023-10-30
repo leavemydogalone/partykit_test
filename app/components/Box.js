@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import styles from "./Box.module.css";
 import { ACTIONS } from "@/party/types";
-import { keepBoxInContainer } from "../helpers/boxHelpers";
 import { forwardRef } from "react";
 
 const Box = forwardRef(function Box(
@@ -16,7 +15,6 @@ const Box = forwardRef(function Box(
     handleMouseDown,
     index,
     setSelectedBoxIndex,
-    selectedBoxIndex,
     zIndex,
   },
   ref
@@ -59,7 +57,7 @@ const Box = forwardRef(function Box(
     <>
       <div
         className={styles.screen}
-        style={{ display: selected ? "block" : "none" }}
+        style={{ display: selected ? "block" : "none", zIndex: `${zIndex}` }}
       ></div>
 
       <div
@@ -87,7 +85,7 @@ const Box = forwardRef(function Box(
         <main className={styles.centerContainer}>
           <textarea
             onChange={(e) => handleInputChange(e)}
-            value={text}
+            value={decodeURI(text)}
             ref={textRef}
           />
         </main>

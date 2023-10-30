@@ -1,5 +1,6 @@
 /* eslint-env browser */
 import { ACTIONS } from "./types";
+import escape from "./escape";
 // @ts-check
 // Optional JS type checking, powered by TypeScript.
 /** @typedef {import("partykit/server").Party} Party */
@@ -53,6 +54,7 @@ class PartyServer {
    */
   onMessage(message, sender) {
     const { payload, action } = JSON.parse(message);
+
     switch (action) {
       case ACTIONS.MOVE_BOX:
         this.boxes = this.boxes.map((box) => {
@@ -87,7 +89,7 @@ class PartyServer {
           if (box.id !== payload.id) {
             return { ...box };
           } else {
-            return { ...box, text: payload.text };
+            return { ...box, text: escape(payload.text) };
           }
         });
         this.party.broadcast(JSON.stringify(this.boxes));

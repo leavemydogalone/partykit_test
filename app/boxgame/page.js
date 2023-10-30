@@ -53,7 +53,6 @@ export default function BoxContainer() {
       return [index, ...sliced];
     });
 
-    console.log(heightOrder);
     const nullChecker =
       ref.current[index] !== null &&
       setOffset({
