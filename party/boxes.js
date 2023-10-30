@@ -12,7 +12,6 @@ import escape from "./escape";
  * @implements {Server}
  */
 class PartyServer {
-  options = { hibernate: true };
   /**
    * @param {Party} party - The Party object.
    */

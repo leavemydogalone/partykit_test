@@ -48,7 +48,7 @@ export default function BoxContainer() {
   }
 
   function handleMouseDown(index, id, e) {
-    // sets the order of the items, to be used with zIndex
+    // sets the vertical order of the items, to be used with zIndex
     setHeightOrder((prev) => {
       const sliced = prev.filter((item) => item !== id);
       return [id, ...sliced];
