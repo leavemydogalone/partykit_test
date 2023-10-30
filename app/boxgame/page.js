@@ -12,6 +12,7 @@ export default function BoxContainer() {
   const [selectedBoxId, setSelectedBoxId] = useState(null);
   const [selectedBoxIndex, setSelectedBoxIndex] = useState(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [heightOrder, setHeightOrder] = useState([]);
 
   const boxContainer = useRef(null);
   const ref = useRef([]);
@@ -47,6 +48,12 @@ export default function BoxContainer() {
   }
 
   function handleMouseDown(index, e) {
+    setHeightOrder((prev) => {
+      const sliced = prev.filter((i) => i !== index);
+      return [index, ...sliced];
+    });
+
+    console.log(heightOrder);
     const nullChecker =
       ref.current[index] !== null &&
       setOffset({
@@ -90,6 +97,11 @@ export default function BoxContainer() {
                 ref={(el) => (ref.current[index] = el)}
                 index={index}
                 selectedBoxIndex={selectedBoxIndex}
+                zIndex={
+                  heightOrder.indexOf(index) > -1
+                    ? heightOrder.length - heightOrder.indexOf(index)
+                    : 1
+                }
               />
             ))
           : " "}

@@ -17,6 +17,7 @@ const Box = forwardRef(function Box(
     index,
     setSelectedBoxIndex,
     selectedBoxIndex,
+    zIndex,
   },
   ref
 ) {
@@ -67,7 +68,8 @@ const Box = forwardRef(function Box(
           left: position.x,
           top: position.y,
           border: selected ? "2px solid" : "",
-          zIndex: selectedBoxIndex === index ? "5" : "1",
+          // zIndex: selectedBoxIndex === index ? "5" : "1",
+          zIndex: `${zIndex}`,
         }}
         id={id}
         ref={ref}
