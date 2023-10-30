@@ -74,6 +74,8 @@ class PartyServer {
           id: newId,
           selected: false,
         });
+        const listLessThanTen = this.boxes.slice(0, 10);
+        this.boxes = listLessThanTen;
         this.party.broadcast(JSON.stringify(this.boxes));
         break;
       case ACTIONS.REMOVE_BOX:
