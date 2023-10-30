@@ -4,6 +4,8 @@ Simple app demoing Partykit. Create a multiplayer session and open multiple brow
 
 Stateful session to track and limit frequency of user clicks. If they click too quickly they can get timed out.
 
+Partykit https://partykit_next_test-party.leavemydogalone.partykit.dev
+
 Clone repo
 
 npm install

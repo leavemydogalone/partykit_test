@@ -1,5 +1,5 @@
 {
-  "name": "partykit_next_test-party",
+  "name": "partykit_next_test",
   "main": "party/index.js",
   "parties": { "boxes": "party/boxes.js" },
   "compatibilityDate": "2023-10-14"
