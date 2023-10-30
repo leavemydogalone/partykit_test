@@ -12,6 +12,7 @@ import escape from "./escape";
  * @implements {Server}
  */
 class PartyServer {
+  options = { hibernate: true };
   /**
    * @param {Party} party - The Party object.
    */
@@ -19,12 +20,10 @@ class PartyServer {
     /** @type {Party} */
     this.party = party;
   }
+
   boxes = [{ position: { x: 0, y: 0 }, id: 0, selected: false }];
 
   async onStart() {
-    // await this.party.storage.delete("boxes");
-    // await this.party.storage.put("boxes", this.boxes);
-
     this.boxes = (await this.party.storage.get("boxes")) ?? [];
   }
   /**
@@ -87,11 +86,12 @@ class PartyServer {
 
         break;
       case ACTIONS.UPDATE_BOX_TEXT:
+        const escapedAndAbridgedText = escape(payload.text.substring(0, 400));
         this.boxes = this.boxes.map((box) => {
           if (box.id !== payload.id) {
             return { ...box };
           } else {
-            return { ...box, text: escape(payload.text.substring(0, 400)) };
+            return { ...box, text: escapedAndAbridgedText };
           }
         });
         this.party.broadcast(JSON.stringify(this.boxes));

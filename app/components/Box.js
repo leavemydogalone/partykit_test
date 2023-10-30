@@ -66,7 +66,6 @@ const Box = forwardRef(function Box(
           left: position.x,
           top: position.y,
           border: selected ? "2px solid" : "",
-          // zIndex: selectedBoxIndex === index ? "5" : "1",
           zIndex: `${zIndex}`,
         }}
         id={id}
@@ -75,6 +74,7 @@ const Box = forwardRef(function Box(
         <div
           className={styles.upperBar}
           onMouseDown={(e) => {
+            //prevents mouse drag selection of text while holding click
             e.preventDefault();
             setSelectedBoxIndex(index);
             setSelectedBoxId(id);
@@ -85,7 +85,7 @@ const Box = forwardRef(function Box(
         <main className={styles.centerContainer}>
           <textarea
             onChange={(e) => handleInputChange(e)}
-            value={decodeURI(text)}
+            value={text}
             ref={textRef}
           />
         </main>
