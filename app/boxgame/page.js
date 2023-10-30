@@ -18,7 +18,7 @@ export default function BoxContainer() {
   const ref = useRef([]);
 
   const ws = usePartySocket({
-    host: "partykit_next_test.leavemydogalone.partykit.dev",
+    host: process.env.NEXT_PUBLIC_PARTYKIT_HOST,
     room: "boxes",
     party: "boxes",
     onOpen(event) {

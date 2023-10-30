@@ -8,7 +8,7 @@ export default function Clicker() {
   const [disabled, setDisabled] = useState(false);
 
   const ws = usePartySocket({
-    host: "https://partykit_next_test.leavemydogalone.partykit.dev",
+    host: process.env.NEXT_PUBLIC_PARTYKIT_HOST,
     room: "my-room",
 
     onOpen() {
@@ -16,9 +16,6 @@ export default function Clicker() {
     },
     onMessage(event) {
       setClicks(event.data);
-    },
-    onError(error) {
-      console.log(error);
     },
   });
 
