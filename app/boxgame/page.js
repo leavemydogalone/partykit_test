@@ -116,7 +116,7 @@ export default function BoxContainer() {
           );
         }}
       >
-        ADD BOX
+        ADD NOTE
       </button>
     </main>
   );
