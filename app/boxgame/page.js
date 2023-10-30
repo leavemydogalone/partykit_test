@@ -47,10 +47,10 @@ export default function BoxContainer() {
     );
   }
 
-  function handleMouseDown(index, e) {
+  function handleMouseDown(index, id, e) {
     setHeightOrder((prev) => {
-      const sliced = prev.filter((i) => i !== index);
-      return [index, ...sliced];
+      const sliced = prev.filter((item) => item !== id);
+      return [id, ...sliced];
     });
 
     const nullChecker =
@@ -97,8 +97,8 @@ export default function BoxContainer() {
                 index={index}
                 selectedBoxIndex={selectedBoxIndex}
                 zIndex={
-                  heightOrder.indexOf(index) > -1
-                    ? heightOrder.length - heightOrder.indexOf(index)
+                  heightOrder.indexOf(box.id) > -1
+                    ? heightOrder.length - heightOrder.indexOf(box.id)
                     : 1
                 }
               />

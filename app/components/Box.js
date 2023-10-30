@@ -79,7 +79,7 @@ const Box = forwardRef(function Box(
             setSelectedBoxIndex(index);
             setSelectedBoxId(id);
             setMouseIsDown(true);
-            handleMouseDown(index, e);
+            handleMouseDown(index, id, e);
           }}
         ></div>
         <main className={styles.centerContainer}>
