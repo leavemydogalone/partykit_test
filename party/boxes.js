@@ -91,7 +91,7 @@ class PartyServer {
           if (box.id !== payload.id) {
             return { ...box };
           } else {
-            return { ...box, text: escape(payload.text) };
+            return { ...box, text: escape(payload.text.substring(0, 400)) };
           }
         });
         this.party.broadcast(JSON.stringify(this.boxes));

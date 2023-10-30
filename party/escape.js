@@ -1,5 +1,10 @@
 export default function escape(s) {
   var map = {
+    // "&": "&amp;",
+    // "<": "&lt;",
+    // ">": "&gt;",
+    // '"': "&quot;",
+    // "'": "&#039;",
     "&": "",
     "<": "",
     ">": "",
