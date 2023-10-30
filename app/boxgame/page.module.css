@@ -7,8 +7,19 @@
   max-height: 95%;
   max-width: 600px;
   height: 600px;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #f7f7f7;
   position: relative;
-  overflow: hidden;
+}
+.button {
+  font-size: 20px;
+  border: 1px solid blue;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-top: 10px;
+}
+@media screen and (hover: hover) and (pointer: fine) {
+  .button:hover {
+    cursor: pointer;
+  }
 }

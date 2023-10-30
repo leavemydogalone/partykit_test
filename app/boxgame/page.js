@@ -106,6 +106,7 @@ export default function BoxContainer() {
           : " "}
       </section>
       <button
+        className={styles.button}
         onClick={() => {
           ws.send(
             JSON.stringify({
