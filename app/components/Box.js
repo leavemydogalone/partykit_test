@@ -2,59 +2,34 @@ import React, { useState, useRef, useEffect } from "react";
 import styles from "./Box.module.css";
 import { ACTIONS } from "@/party/types";
 import { keepBoxInContainer } from "../helpers/boxHelpers";
+import { forwardRef } from "react";
 
-export default function Box({
-  ws,
-  position,
-  id,
-  mouseIsDown,
-  setMouseIsDown,
-  boxContainer,
-  text,
-  selected,
-  setSelectedBoxId,
-}) {
-  //   the left offset of the box from parent div
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const box = useRef(null);
+const Box = forwardRef(function Box(
+  {
+    ws,
+    position,
+    id,
+    setMouseIsDown,
+    text,
+    selected,
+    setSelectedBoxId,
+    handleMouseDown,
+    index,
+    setSelectedBoxIndex,
+    selectedBoxIndex,
+  },
+  ref
+) {
   const textRef = useRef(null);
-  const [newZIndex, setNewZIndex] = useState(1);
-
-  //TODO
-  //need to create logic to handle when a box is selected or being edited by someone else
-  //prevent others from editing
-  //make the box rise to the top of z-index for the one moving/making the edit and
-  //prevent text select when moving
 
   useEffect(() => {
+    // sets the height of the textarea based on text inside
     if (textRef.current) {
-      // We need to reset the height momentarily to get the correct scrollHeight for the textarea
       textRef.current.style.height = "0px";
       const scrollHeight = textRef.current.scrollHeight;
-
-      // We then set the height directly, outside of the render loop
-      // Trying to set this with state or a ref will product an incorrect value.
       textRef.current.style.height = scrollHeight + 1 + "px";
     }
   }, [textRef.current, text]);
-
-  function handleMove(id, position) {
-    let positionWithinBox = keepBoxInContainer(
-      position,
-      box.current,
-      boxContainer
-    );
-
-    ws.send(
-      JSON.stringify({
-        action: ACTIONS.MOVE_BOX,
-        payload: {
-          id: id,
-          position: { x: positionWithinBox.x, y: positionWithinBox.y },
-        },
-      })
-    );
-  }
 
   function handleInputChange(e) {
     ws.send(
@@ -87,36 +62,24 @@ export default function Box({
       ></div>
 
       <div
-        ref={box}
         className={styles.box}
         style={{
           left: position.x,
           top: position.y,
           border: selected ? "2px solid" : "",
-          zIndex: selected ? "999" : "1",
+          zIndex: selectedBoxIndex === index ? "5" : "1",
         }}
         id={id}
-        onMouseMoveCapture={(e) => {
-          if (mouseIsDown) {
-            handleMove(id, {
-              x: offset.x + e.clientX,
-              y: offset.y + e.clientY,
-            });
-          }
-        }}
+        ref={ref}
       >
         <div
           className={styles.upperBar}
           onMouseDown={(e) => {
             e.preventDefault();
+            setSelectedBoxIndex(index);
             setSelectedBoxId(id);
             setMouseIsDown(true);
-            const nullChecker =
-              box.current !== null &&
-              setOffset({
-                x: box.current.offsetLeft - e.clientX,
-                y: box.current.offsetTop - e.clientY,
-              });
+            handleMouseDown(index, e);
           }}
         ></div>
         <main className={styles.centerContainer}>
@@ -132,4 +95,6 @@ export default function Box({
       </div>
     </>
   );
-}
+});
+
+export default Box;
