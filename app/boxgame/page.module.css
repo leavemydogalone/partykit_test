@@ -31,3 +31,7 @@
     cursor: pointer;
   }
 }
+.button:active {
+  top: -1px;
+  filter: brightness(1);
+}
